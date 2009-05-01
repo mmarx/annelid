@@ -12,20 +12,12 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-cmake_minimum_required (VERSION 2.6)
+include(LibFindMacros)
 
-project (annelid)
+find_path(libDL_INCLUDE_DIR NAMES dlfcn.h PATHS /usr/include /usr/local/include)
+find_library(libDL_LIBRARY NAMES dl PATHS /usr/lib /usr/local/lib)
 
-include("cmake/Doxygen-helper.cmake")
-include("cmake/Fortran-helper.cmake")
+set(libDL_PROCESS_INCLUDES libDL_INCLUDE_DIR)
+set(libDL_PROCESS_LIBS libDL_LIBRARY)
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
-find_package(libDL REQUIRED)
-include_directories("${libDL_INCLUDE_DIRS}")
-
-add_executable("annelid" "annelid.f90")
-add_library("annelid_test_a" SHARED "test/annelid_test_a.f90")
-add_executable("loader" "loader.c")
-target_link_libraries("loader" ${libDL_LIBRARIES})
-
+libfind_process(libDL)

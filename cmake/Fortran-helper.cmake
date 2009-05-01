@@ -12,20 +12,24 @@
 # ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  
 # OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
-cmake_minimum_required (VERSION 2.6)
+enable_language (Fortran)
+get_filename_component (Fortran_COMPILER_NAME ${CMAKE_Fortran_COMPILER} NAME)
 
-project (annelid)
-
-include("cmake/Doxygen-helper.cmake")
-include("cmake/Fortran-helper.cmake")
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
-
-find_package(libDL REQUIRED)
-include_directories("${libDL_INCLUDE_DIRS}")
-
-add_executable("annelid" "annelid.f90")
-add_library("annelid_test_a" SHARED "test/annelid_test_a.f90")
-add_executable("loader" "loader.c")
-target_link_libraries("loader" ${libDL_LIBRARIES})
-
+if (Fortran_COMPILER_NAME STREQUAL "gfortran")
+  # gfortran
+  set (CMAKE_Fortran_FLAGS_RELEASE "")
+  set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -ggdb -Wall -Werror")
+elseif (Fortran_COMPILER_NAME STREQUAL "ifort")
+  # ifort
+  set (CMAKE_Fortran_FLAGS_RELEASE "-O3")
+  set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -ggdb -Wall -Werror")
+elseif (Fortran_COMPILER_NAME STREQUAL "g95")
+  # g95
+  set (CMAKE_Fortran_FLAGS_RELEASE "")
+  set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -ggdb -Wall -Werror")
+else ()
+  message ("CMAKE_Fortran_COMPILER full path: " ${CMAKE_Fortran_COMPILER})
+  message ("Fortran compiler: " ${Fortran_COMPILER_NAME})
+  set (CMAKE_Fortran_FLAGS_RELEASE "-O2")
+  set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -g -Wall -Werror")
+endif ()
