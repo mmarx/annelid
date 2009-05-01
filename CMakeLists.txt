@@ -26,6 +26,7 @@ include_directories("${libDL_INCLUDE_DIRS}")
 
 add_executable("annelid" "annelid.f90")
 add_library("annelid_test_a" SHARED "test/annelid_test_a.f90")
+add_library("annelid_test_b" SHARED "test/annelid_test_b.f90")
 add_executable("loader" "loader.c")
 target_link_libraries("loader" ${libDL_LIBRARIES})
 
