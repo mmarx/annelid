@@ -1,23 +1,34 @@
-program annelid_tester
+! annelid - fortran shared object loading
+! “The Many sings to us.”
+!
+! Copyright (c) 2009, Maximilian Marx <mmarx@wh2.tu-dresden.de>
+
+! Permission to use, copy, modify, and/or distribute this software for any
+! purpose with or without fee is hereby granted, provided that the above
+! copyright notice and this permission notice appear in all copies.
+
+! THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+! WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+! MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+! ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+! WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+! ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+! OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+module annelid
   use, intrinsic :: iso_c_binding
-
-  type (c_ptr) :: handle_a
-  type (c_ptr) :: handle_b
-  type (c_funptr) :: symbol_a
-  type (c_funptr) :: symbol_b
-
-  interface
-     integer function signature ()
-     end function signature
-  end interface
+  private
+  public :: load_shared_object, unload_shared_object, resolve_symbol, &
+       & c_char, c_ptr, c_funptr, c_f_procpointer, c_null_ptr, c_null_funptr, &
+       & c_null_char
 
   interface
-     function load_shared_object (name) bind (c)
+     function do_load_shared_object (name) bind (c, name = "load_shared_object")
        use, intrinsic :: iso_c_binding
        
        character (kind = c_char, len = *) :: name
-       type (c_ptr) :: load_shared_object
-     end function load_shared_object
+       type (c_ptr) :: do_load_shared_object
+     end function do_load_shared_object
 
      subroutine unload_shared_object (handle) bind (c)
        use, intrinsic :: iso_c_binding
@@ -25,33 +36,31 @@ program annelid_tester
        type (c_ptr), value :: handle
      end subroutine unload_shared_object
 
-     function resolve_symbol (handle, name) bind (c)
+     function do_resolve_symbol (handle, name) bind (c, name = "resolve_symbol")
        use, intrinsic :: iso_c_binding
 
        type (c_ptr), value :: handle
        character (kind = c_char, len = *) :: name
-       type (c_funptr) :: resolve_symbol       
-     end function resolve_symbol
+       type (c_funptr) :: do_resolve_symbol       
+     end function do_resolve_symbol
   end interface
 
-  procedure (signature), pointer :: test_a => null ()
-  procedure (signature), pointer :: test_b => null ()
-  
-  handle_a = load_shared_object ("./libannelid_test_a.so" // char (0))
-  handle_b = load_shared_object ("./libannelid_test_b.so" // char (0))
+contains
+  function load_shared_object (name)
+    character (kind = c_char, len = *) :: name
+    type (c_ptr) :: load_shared_object
 
-  symbol_a = resolve_symbol (handle_a, "annelid_test" // char (0))
-  symbol_b = resolve_symbol (handle_b, "annelid_test" // char (0))
+    load_shared_object = do_load_shared_object (name // c_null_char)
+    
+  end function load_shared_object
 
-  call c_f_procpointer (symbol_a, test_a)
-  call c_f_procpointer (symbol_b, test_b)
+  function resolve_symbol (handle, name)
+    type (c_ptr), value :: handle
+    character (kind = c_char, len = *) :: name
+    type (c_funptr) :: resolve_symbol
 
-  write(*, *) 'got: ', test_a ()
-  write(*, *) 'got: ', test_b ()
+    resolve_symbol = do_resolve_symbol (handle, name // c_null_char)
+    
+  end function resolve_symbol
 
-  nullify (test_a)
-  nullify (test_b)
-
-  call unload_shared_object (handle_a)
-  call unload_shared_object (handle_b)
-end program annelid_tester
+end module annelid
