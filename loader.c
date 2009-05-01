@@ -3,9 +3,13 @@
 
 int main (int argc, char** argv)
 {
+  typedef int (*signature) ();
+
   void* so_handle = NULL;
   void* function = NULL;
   char* error = NULL;
+
+  int retval = 0;
 
   so_handle = dlopen ("./libannelid_test_a.so", (RTLD_LAZY | RTLD_LOCAL));
 
@@ -22,6 +26,10 @@ int main (int argc, char** argv)
     {
       fprintf (stderr, "[annelid] dlsym failed: %s.", error);
     }
+
+  retval = ((signature) function) ();
+
+  printf ("got: %d\n", retval);
 
   if (dlclose (so_handle))
     {
