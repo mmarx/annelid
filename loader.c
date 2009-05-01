@@ -15,25 +15,29 @@ int main (int argc, char** argv)
 
   if (NULL == so_handle)
     {
-      fprintf (stderr, "[annelid] dlopen failed: %s.", dlerror ());
+      fprintf (stderr, "[annelid] dlopen failed: %s.\n", dlerror ());
+
+      return 1;
     }
 
   dlerror ();
-  function = dlsym (so_handle, "annelid_test_a_mp_annelid_test_");
+  function = dlsym (so_handle, "annelid_test");
   error = dlerror ();
 
   if (NULL != error)
     {
-      fprintf (stderr, "[annelid] dlsym failed: %s.", error);
+      fprintf (stderr, "[annelid] dlsym failed: %s.\n", error);
     }
+  else
+    {
+      retval = ((signature) function) ();
 
-  retval = ((signature) function) ();
-
-  printf ("got: %d\n", retval);
+      printf ("got: %d\n", retval);
+    }
 
   if (dlclose (so_handle))
     {
-      fprintf (stderr, "[annelid] dlclose failed: %s.", dlerror ());
+      fprintf (stderr, "[annelid] dlclose failed: %s.\n", dlerror ());
     }
 
   return 0;
