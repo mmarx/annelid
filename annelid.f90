@@ -37,8 +37,6 @@ program annelid_tester
   procedure (signature), pointer :: test_a => null ()
   procedure (signature), pointer :: test_b => null ()
   
-  write(*, *) 'hello, world!'
-
   handle_a = load_shared_object ("./libannelid_test_a.so" // char (0))
   handle_b = load_shared_object ("./libannelid_test_b.so" // char (0))
 
