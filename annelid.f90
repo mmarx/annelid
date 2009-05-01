@@ -26,7 +26,7 @@ module annelid
      function do_load_shared_object (name) bind (c, name = "load_shared_object")
        use, intrinsic :: iso_c_binding
        
-       character (kind = c_char, len = *) :: name
+       character (kind = c_char), dimension (*) :: name
        type (c_ptr) :: do_load_shared_object
      end function do_load_shared_object
 
@@ -40,7 +40,7 @@ module annelid
        use, intrinsic :: iso_c_binding
 
        type (c_ptr), value :: handle
-       character (kind = c_char, len = *) :: name
+       character (kind = c_char), dimension (*) :: name
        type (c_funptr) :: do_resolve_symbol       
      end function do_resolve_symbol
   end interface
