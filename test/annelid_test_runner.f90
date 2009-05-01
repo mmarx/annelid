@@ -31,7 +31,7 @@
 !>\endverbatim
 !>
 
-program annelid_test_tester
+program annelid_test_runner
   use annelid
   implicit none
 
@@ -85,4 +85,4 @@ program annelid_test_tester
   call unload_shared_object (handle_a)
   call unload_shared_object (handle_b)
 
-end program annelid_test_tester
+end program annelid_test_runner
