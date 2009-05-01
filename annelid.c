@@ -16,8 +16,17 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+/**
+ *\file
+ * \brief C implementation
+ * \details This contains the implementation of annelid's C part.
+ * \author Maximilian Marx
+ */
+
 #include <dlfcn.h>
 #include <stdio.h>
+
+#include "annelid.h"
 
 void
 print_error (char* description, char* error)

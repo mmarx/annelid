@@ -15,12 +15,33 @@
 ! ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 ! OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+!> \file
+!> \brief Test fixture
+!> \details Specifies a shared object that is used as a test fixture.
+!> \author Maximilian Marx
+
+!> \brief Test fixture
+!> \details This module contains a test fixture that exports annelid_test.
+
 module annelid_test_a
+
   use, intrinsic :: iso_c_binding
+  implicit none
+  
+  private
+  public :: annelid_test
+
 contains
+
+  !> \brief Returns 23
+  !> \details Test fixture that returns 23.
+  !>
+  !> \return always 23.
+
   pure function annelid_test () bind(c)
     integer (kind = c_int) :: annelid_test
 
     annelid_test = 23
   end function annelid_test
+
 end module annelid_test_a
