@@ -22,7 +22,7 @@ if (Fortran_COMPILER_NAME STREQUAL "gfortran")
 elseif (Fortran_COMPILER_NAME STREQUAL "ifort")
   # ifort
   set (CMAKE_Fortran_FLAGS_RELEASE "-O3")
-  set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -ggdb -Wall -Werror")
+  set (CMAKE_Fortran_FLAGS_DEBUG   "-O0 -ggdb -warn all")
 elseif (Fortran_COMPILER_NAME STREQUAL "g95")
   # g95
   set (CMAKE_Fortran_FLAGS_RELEASE "")
